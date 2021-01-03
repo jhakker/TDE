@@ -30,10 +30,18 @@ tde_default_shell_cmd = "fish"
 # tde_xon = "xon"
 
 ###############################################################################
-# General utility functions
+# Vim related utility functions
 
-def close_all_buffers():
+def vim_close_all_buffers():
     vim.command(":1,$bd")
+
+
+def vim_save_session_to_file(filename):
+    vim.command(":mksession! " + filename)
+
+
+def vim_load_session_from_file(filename):
+    vim.command(":source " + filename)
 
 
 ###############################################################################
@@ -52,21 +60,29 @@ def get_default_session():
     return None
 
 
-def save_session(session_name=get_default_session()):
+# def save_session(session_name=get_default_session()):
+def save_session(*argv):
+    session_name = get_default_session()
+    if len(argv) == 1:
+        session_name = argv[0]
     # save vim session
     if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
-        vim.command(":mksession! " + os.path.join(vim_session_dir, session_name))
+        vim_save_session_to_file(os.path.join(vim_session_dir, session_name))
         with open(default_session_file, "w") as f:
             f.write(session_name)
     # save console session
 
 
-def open_session(session_name=get_default_session()):
+# def open_session(session_name=get_default_session()):
+def open_session(*argv):
+    session_name = get_default_session()
+    if len(argv) == 1:
+        session_name = argv[0]
     if session_name and session_name != get_default_session():
         close_session()
     # load vim session
     if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
-        vim.command(":source " + os.path.join(vim_session_dir, session_name))
+        vim_load_session_from_file(os.path.join(vim_session_dir, session_name))
         with open(default_session_file, "w") as f:
             f.write(session_name)
     # load console session
@@ -75,7 +91,7 @@ def open_session(session_name=get_default_session()):
 def close_session():
     session_name = get_default_session()
     if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
-        close_all_buffers()
+        vim_close_all_buffers()
         save_session()
         if os.path.exists(default_session_file):
             os.remove(default_session_file)
