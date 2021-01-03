@@ -56,6 +56,29 @@ function! ErrorFunc(errno)
 endfunction
 command! -nargs=1 Error call ErrorFunc(<f-args>)
 
+function! SessionCloseFunc()
+    py3 close_session()
+endfunction
+command! SessionClose call SessionCloseFunc()
+
+function! SessionOpenFunc(...)
+    if a:0 == 0
+        py3 open_session()
+    elseif a:0 == 1
+        py3 open_session(vim.eval("a:1"))
+    endif
+endfunction
+command! -nargs=* SessionOpen call SessionOpenFunc(<f-args>)
+
+function! SessionSaveFunc(...)
+    if a:0 == 0
+        py3 save_session()
+    elseif a:0 == 1
+        py3 save_session(vim.eval("a:1"))
+    endif
+endfunction
+command! -nargs=* SessionSave call SessionSaveFunc(<f-args>)
+
 function! ConsoleCloseFunc()
     py3 close_console()
 endfunction
@@ -79,23 +102,23 @@ function! CloseAllWindowsFunc()
 endfunction
 command! CloseAllWindows call CloseAllWindowsFunc()
 
-function! DesktopOpenFunc(...)
-    if a:0 == 0
-        py3 open_desktop()
-    elseif a:0 == 1
-        py3 open_desktop(vim.eval("a:1"))
-    endif
-endfunction
-command! -nargs=* DesktopOpen call DesktopOpenFunc(<f-args>)
+" function! DesktopOpenFunc(...)
+"     if a:0 == 0
+"         py3 open_desktop()
+"     elseif a:0 == 1
+"         py3 open_desktop(vim.eval("a:1"))
+"     endif
+" endfunction
+" command! -nargs=* DesktopOpen call DesktopOpenFunc(<f-args>)
 
-function! DesktopCloseFunc(...)
-    if a:0 == 0
-        py3 close_desktop()
-    elseif a:0 == 1
-        py3 close_desktop(vim.eval("a:1"))
-    endif
-endfunction
-command! -nargs=* DesktopClose call DesktopCloseFunc(<f-args>)
+" function! DesktopCloseFunc(...)
+"     if a:0 == 0
+"         py3 close_desktop()
+"     elseif a:0 == 1
+"         py3 close_desktop(vim.eval("a:1"))
+"     endif
+" endfunction
+" command! -nargs=* DesktopClose call DesktopCloseFunc(<f-args>)
 
 augroup tde
     " autocmd VimLeavePre * !CloseAllWindows
@@ -108,5 +131,4 @@ function! ErrorSetOutputTmux()
 endfunction
 
 
-" SessionOpenLast
-DesktopOpen
+SessionOpen

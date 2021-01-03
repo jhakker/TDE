@@ -19,26 +19,80 @@ cellstr = "# %%"
 bash_cmd = "bash"
 # tde_dir = os.path.join(os.environ["HOME"], "/devel/tde")
 tde_dir = "/home/jorg/devel/tde"
-init_anaconda = os.path.join(tde_dir, "init_anaconda.sh")
+# init_anaconda = os.path.join(tde_dir, "init_anaconda.sh")
 tde_default_shell_cmd = "fish"
 # tde_default_shell_cmd = "xonsh"
-tde_ipython2_cmd = "ipython"
-tde_ipython2_init = "init_ipython2.py"
-tde_ipython3_cmd = "ipython3"
-tde_ipython3_init = "init_ipython3.py"
-tde_session = "tde"
+# tde_ipython2_cmd = "ipython"
+# tde_ipython2_init = "init_ipython2.py"
+# tde_ipython3_cmd = "ipython3"
+# tde_ipython3_init = "init_ipython3.py"
+# tde_session = "tde"
 # tde_xon = "xon"
 
+###############################################################################
+# General utility functions
+
+def close_all_buffers():
+    vim.command(":1,$bd")
+
+
+###############################################################################
+# Session interface
+
+# global session related configs
+session_dir = os.path.join(os.environ["HOME"], ".tde/sessions")
+vim_session_dir = os.path.join(session_dir, "vim")
+console_session_dir = os.path.join(session_dir, "console")
+default_session_file = os.path.join(session_dir, "default") 
+
+def get_default_session():
+    if os.path.exists(default_session_file):
+        with open(default_session_file) as f:
+            return f.readline().strip()
+    return None
+
+
+def save_session(session_name=get_default_session()):
+    # save vim session
+    if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
+        vim.command(":mksession! " + os.path.join(vim_session_dir, session_name))
+        with open(default_session_file, "w") as f:
+            f.write(session_name)
+    # save console session
+
+
+def open_session(session_name=get_default_session()):
+    if session_name and session_name != get_default_session():
+        close_session()
+    # load vim session
+    if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
+        vim.command(":source " + os.path.join(vim_session_dir, session_name))
+        with open(default_session_file, "w") as f:
+            f.write(session_name)
+    # load console session
+
+
+def close_session():
+    session_name = get_default_session()
+    if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
+        close_all_buffers()
+        save_session()
+        if os.path.exists(default_session_file):
+            os.remove(default_session_file)
+
+
+###############################################################################
+# Console component IPC interface
 
 # def tmux_cmd(cmd):
 #     libtmux.Server().cmd(cmd)
 #     # libtmux.Server().cmd("source-file " + os.path.join(tde_dir, "tmux.conf"))
 
 
-def get_session():
-    pass
-    # server = libtmux.Server()
-    # return server.find_where({"session_name": tde_session})
+# def get_session():
+#     pass
+#     # server = libtmux.Server()
+#     # return server.find_where({"session_name": tde_session})
 
 
 def get_tde_window():
@@ -80,34 +134,34 @@ def close_console():
     #     console.cmd("kill-pane")
 
 
-def open_desktop(cmd=tde_default_shell_cmd):
-    pass
-    # session = get_session()
-    # # cmd = "/home/jorg/.local/bin/xonsh"
-    # # session.cmd("new-window", "-d", "-n", tde_con, "-c",
-    # #                      vim.eval("getcwd()"), cmd)
-    # # window = session.find_where({"window_name": tde_con})
-    # window = session.new_window(window_name=cmd[:3],
-    #                             start_directory=vim.eval("getcwd()"),
-    #                             attach=False,
-    #                             window_shell=cmd)
-    # window.cmd("split-window", "-d", "-h", "-c", vim.eval("getcwd()"), cmd)
+# def open_desktop(cmd=tde_default_shell_cmd):
+#     pass
+#     # session = get_session()
+#     # # cmd = "/home/jorg/.local/bin/xonsh"
+#     # # session.cmd("new-window", "-d", "-n", tde_con, "-c",
+#     # #                      vim.eval("getcwd()"), cmd)
+#     # # window = session.find_where({"window_name": tde_con})
+#     # window = session.new_window(window_name=cmd[:3],
+#     #                             start_directory=vim.eval("getcwd()"),
+#     #                             attach=False,
+#     #                             window_shell=cmd)
+#     # window.cmd("split-window", "-d", "-h", "-c", vim.eval("getcwd()"), cmd)
 
 
-def close_desktop(cmd=tde_default_shell_cmd):
-    pass
-    # session = get_session()
-    # window = session.find_where({"window_name": cmd[:3]})
-    # window.kill_window()
+# def close_desktop(cmd=tde_default_shell_cmd):
+#     pass
+#     # session = get_session()
+#     # window = session.find_where({"window_name": cmd[:3]})
+#     # window.kill_window()
 
 
 def close_all_windows():
-    pass
+    save_session()
+    close_console()
     # session = get_session()
     # for w in session.windows:
     #     if w.name != tde_tde:
     #         w.kill_window()
-    # close_console()
 
 
 def send_to_console(string):
