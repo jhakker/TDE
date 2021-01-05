@@ -43,6 +43,8 @@ def vim_save_session_to_file(filename):
 def vim_load_session_from_file(filename):
     vim.command(":source " + filename)
 
+# command argument completion:
+# https://stackoverflow.com/questions/38795307/vim-script-command-complete-pressing-tab-reload-the-list
 
 ###############################################################################
 # Session interface
@@ -91,8 +93,8 @@ def open_session(*argv):
 def close_session():
     session_name = get_default_session()
     if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
-        vim_close_all_buffers()
         save_session()
+        vim_close_all_buffers()
         if os.path.exists(default_session_file):
             os.remove(default_session_file)
 
