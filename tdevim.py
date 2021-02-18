@@ -18,7 +18,7 @@ currerr = 0
 cellstr = "# %%"
 bash_cmd = "bash"
 # tde_dir = os.path.join(os.environ["HOME"], "/devel/tde")
-tde_dir = "/home/jorg/devel/tde"
+# tde_dir = "/home/jorg/devel/tde"
 # init_anaconda = os.path.join(tde_dir, "init_anaconda.sh")
 tde_default_shell_cmd = "fish"
 # tde_default_shell_cmd = "xonsh"
@@ -55,7 +55,7 @@ def vim_load_session_from_file(filename):
 # Session interface
 
 # global session related configs
-session_dir = os.path.join(os.environ["HOME"], ".tde/sessions")
+session_dir = os.path.join(os.environ["HOME"], ".vim/sessions")
 vim_session_dir = os.path.join(session_dir, "vim")
 console_session_dir = os.path.join(session_dir, "console")
 default_session_file = os.path.join(session_dir, "default") 
@@ -104,6 +104,10 @@ def close_session():
         if os.path.exists(default_session_file):
             os.remove(default_session_file)
 
+def exit_vim():
+    close_session()
+    vim.command(":q")
+
 
 ###############################################################################
 # Console component IPC interface
@@ -119,10 +123,10 @@ def close_session():
 #     # return server.find_where({"session_name": tde_session})
 
 
-def get_tde_window():
-    pass
-    # session = get_session()
-    # return session.find_where({"window_name": tde_tde})
+# def get_tde_window():
+#     pass
+#     # session = get_session()
+#     # return session.find_where({"window_name": tde_tde})
 
 
 def get_console():
@@ -133,29 +137,29 @@ def get_console():
     # return None
 
 
-def open_console(cmd=tde_default_shell_cmd, cwd=None, env=None):
-    # close_console()
-    # if cmd == "ipython" or cmd == "ipython3":
-    #     cmd = tde_ipython3_cmd + " -i " + os.path.join(
-    #         tde_dir, tde_ipython3_init)
-    # elif cmd == "ipython2":
-    #     cmd = tde_ipython2_cmd + " -i " + os.path.join(
-    #         tde_dir, tde_ipython2_init)
-    if cwd is None:
-        cwd = vim.eval("getcwd()")
-    # if env == "anaconda":
-    #     cmd = "%s -c 'source %s; cd %s; %s'" % (
-    #         bash_cmd, init_anaconda, cwd, cmd)
-    # get_tde_window().cmd("split-window", "-d", "-h", "-c", cwd, cmd)
-    subprocess.run(["i3-msg", "exec kitty -d " + cwd + " " + cmd])
-    # subprocess.run(["kitty", "-d", cwd, cmd])
+# def open_console(cmd=tde_default_shell_cmd, cwd=None, env=None):
+#     # close_console()
+#     # if cmd == "ipython" or cmd == "ipython3":
+#     #     cmd = tde_ipython3_cmd + " -i " + os.path.join(
+#     #         tde_dir, tde_ipython3_init)
+#     # elif cmd == "ipython2":
+#     #     cmd = tde_ipython2_cmd + " -i " + os.path.join(
+#     #         tde_dir, tde_ipython2_init)
+#     if cwd is None:
+#         cwd = vim.eval("getcwd()")
+#     # if env == "anaconda":
+#     #     cmd = "%s -c 'source %s; cd %s; %s'" % (
+#     #         bash_cmd, init_anaconda, cwd, cmd)
+#     # get_tde_window().cmd("split-window", "-d", "-h", "-c", cwd, cmd)
+#     subprocess.run(["i3-msg", "exec kitty -d " + cwd + " " + cmd])
+#     # subprocess.run(["kitty", "-d", cwd, cmd])
 
 
-def close_console():
-    pass
-    # console = get_console()
-    # if console is not None:
-    #     console.cmd("kill-pane")
+# def close_console():
+#     pass
+#     # console = get_console()
+#     # if console is not None:
+#     #     console.cmd("kill-pane")
 
 
 # def open_desktop(cmd=tde_default_shell_cmd):
