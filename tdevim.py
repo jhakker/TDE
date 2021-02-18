@@ -38,6 +38,7 @@ def vim_close_tabs_and_windows():
 
 
 def vim_close_all_buffers():
+    vim.command(":wa")
     vim.command(":1,$bd!")
 
 
@@ -57,7 +58,7 @@ def vim_load_session_from_file(filename):
 # global session related configs
 session_dir = os.path.join(os.environ["HOME"], ".vim/sessions")
 vim_session_dir = os.path.join(session_dir, "vim")
-console_session_dir = os.path.join(session_dir, "console")
+# console_session_dir = os.path.join(session_dir, "console")
 default_session_file = os.path.join(session_dir, "default") 
 
 def get_default_session():
@@ -67,7 +68,6 @@ def get_default_session():
     return None
 
 
-# def save_session(session_name=get_default_session()):
 def save_session(*argv):
     session_name = get_default_session()
     if len(argv) == 1:
@@ -77,10 +77,8 @@ def save_session(*argv):
         vim_save_session_to_file(os.path.join(vim_session_dir, session_name))
         with open(default_session_file, "w") as f:
             f.write(session_name)
-    # save console session
 
 
-# def open_session(session_name=get_default_session()):
 def open_session(*argv):
     session_name = get_default_session()
     if len(argv) == 1:
@@ -92,7 +90,6 @@ def open_session(*argv):
         vim_load_session_from_file(os.path.join(vim_session_dir, session_name))
         with open(default_session_file, "w") as f:
             f.write(session_name)
-    # load console session
 
 
 def close_session():
@@ -101,8 +98,9 @@ def close_session():
         vim_close_tabs_and_windows()
         save_session()
         vim_close_all_buffers()
-        if os.path.exists(default_session_file):
-            os.remove(default_session_file)
+        # if os.path.exists(default_session_file):
+        #     os.remove(default_session_file)
+
 
 def exit_vim():
     close_session()
@@ -185,7 +183,7 @@ def get_console():
 
 def close_all_windows():
     save_session()
-    close_console()
+    # close_console()
     # session = get_session()
     # for w in session.windows:
     #     if w.name != tde_tde:

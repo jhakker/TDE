@@ -84,6 +84,16 @@ function! SessionSaveFunc(...)
 endfunction
 command! -nargs=* SessionSave call SessionSaveFunc(<f-args>)
 
+" function! CloseAllWindowsFunc()
+"     py3 close_all_windows()
+" endfunction
+" command! CloseAllWindows call CloseAllWindowsFunc()
+
+" augroup tde
+"     " autocmd VimLeavePre * !CloseAllWindows
+"     autocmd VimLeavePre * call CloseAllWindowsFunc()
+" augroup END
+
 SessionOpen
 
 " function! ConsoleCloseFunc()
@@ -104,11 +114,6 @@ SessionOpen
 " endfunction
 " command! -nargs=* ConsoleOpen call ConsoleOpenFunc(<f-args>)
 
-" function! CloseAllWindowsFunc()
-"     py3 close_all_windows()
-" endfunction
-" command! CloseAllWindows call CloseAllWindowsFunc()
-
 " function! DesktopOpenFunc(...)
 "     if a:0 == 0
 "         py3 open_desktop()
@@ -127,10 +132,6 @@ SessionOpen
 " endfunction
 " command! -nargs=* DesktopClose call DesktopCloseFunc(<f-args>)
 
-" augroup tde
-"     " autocmd VimLeavePre * !CloseAllWindows
-"     autocmd VimLeavePre * call CloseAllWindowsFunc()
-" augroup END
 
 
 " function! ErrorSetOutputTmux()
