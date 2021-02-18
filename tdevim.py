@@ -32,8 +32,13 @@ tde_default_shell_cmd = "fish"
 ###############################################################################
 # Vim related utility functions
 
+def vim_close_tabs_and_windows():
+    vim.command(":silent tabonly!")
+    vim.command(":silent only!")
+
+
 def vim_close_all_buffers():
-    vim.command(":1,$bd")
+    vim.command(":1,$bd!")
 
 
 def vim_save_session_to_file(filename):
@@ -93,6 +98,7 @@ def open_session(*argv):
 def close_session():
     session_name = get_default_session()
     if session_name and os.path.exists(os.path.join(vim_session_dir, session_name)):
+        vim_close_tabs_and_windows()
         save_session()
         vim_close_all_buffers()
         if os.path.exists(default_session_file):
@@ -120,7 +126,7 @@ def get_tde_window():
 
 
 def get_console():
-    pass
+    return vim.eval("winbufnr(tde_console_window)")
     # tde_window = get_tde_window()
     # if len(tde_window.panes) > 1:
     #     return get_tde_window().panes[1]
@@ -183,7 +189,7 @@ def close_all_windows():
 
 
 def send_to_console(string):
-    pass
+    vim.eval("term_sendkeys(winbufnr(tde_console_window), '" + string + "')")
     # console = get_console()
     # # bracketed_string = "\x1b[200~" + string + "\x1b[201~"
     # # terminal.send_keys(bracketed_string, enter=True)

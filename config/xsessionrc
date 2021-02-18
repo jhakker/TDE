@@ -1,0 +1,7 @@
+#!/bin/bash
+# set keyboard repeat delay to 250ms (default is usually 500ms)
+xset r rate 250
+setxkbmap -layout us
+# add umlaut keys to US keyboard
+xmodmap ~/devel/tde/config/Xmodmap
+xrandr --output HDMI-1 --auto --left-of eDP-1
